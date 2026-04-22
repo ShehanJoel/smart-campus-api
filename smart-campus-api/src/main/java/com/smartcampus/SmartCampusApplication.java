@@ -8,7 +8,6 @@ package com.smartcampus;
  *
  * @author Shehan Joel
  */
-
 import org.glassfish.jersey.server.ResourceConfig;
 import javax.ws.rs.ApplicationPath;
 
