@@ -8,6 +8,7 @@ package com.smartcampus.store;
  * @author Shehan Joel
  */
 import com.smartcampus.model.Room;
+import com.smartcampus.model.Sensor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Map;
 public class DataStore {
 
     public static final Map<String, Room> rooms = new HashMap<>();
+    public static final Map<String, Sensor> sensors = new HashMap<>();
 
     private DataStore() {
     }
