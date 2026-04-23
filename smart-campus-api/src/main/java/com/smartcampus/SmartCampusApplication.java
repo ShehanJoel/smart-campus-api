@@ -9,12 +9,17 @@ package com.smartcampus;
  * @author Shehan Joel
  */
 import org.glassfish.jersey.server.ResourceConfig;
+
 import javax.ws.rs.ApplicationPath;
 
 @ApplicationPath("/api/v1")
 public class SmartCampusApplication extends ResourceConfig {
 
     public SmartCampusApplication() {
-        packages("com.smartcampus.resources");
+        packages(
+                "com.smartcampus.resources",
+                "com.smartcampus.mapper",
+                "com.smartcampus.filter"
+        );
     }
 }

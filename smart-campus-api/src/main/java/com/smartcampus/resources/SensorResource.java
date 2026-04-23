@@ -81,4 +81,9 @@ public class SensorResource {
                 .entity(sensor)
                 .build();
     }
+
+    @Path("/{sensorId}/readings")
+    public SensorReadingResource getSensorReadingResource(@PathParam("sensorId") String sensorId) {
+        return new SensorReadingResource(sensorId);
+    }
 }
