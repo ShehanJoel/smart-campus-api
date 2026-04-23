@@ -1,159 +1,161 @@
-# Smart Campus Sensor & Room Management API
+# 🏫 Smart Campus Sensor & Room Management API
 
-## Overview
-This project is a RESTful API built using Java, JAX-RS (Jersey), Maven, and an embedded Grizzly HTTP server. It was developed as part of the Client-Server Architectures coursework.
-
-The API manages three main resources:
-- Rooms
-- Sensors
-- Sensor Readings
-
-The system uses in-memory data structures only (`HashMap` and `ArrayList`) and does not use any database.
-
-Base URL:
-http://localhost:8080/api/v1/
+A RESTful API built using **Java, JAX-RS (Jersey), Maven, and an embedded Grizzly HTTP server** for managing campus rooms and IoT sensors.  
+Developed for the **5COSC022W Client-Server Architectures coursework**.
 
 ---
 
-## API Design
+## 📖 Overview
 
-The API follows RESTful principles with resource-based endpoints:
+This API simulates a Smart Campus system with three main resources:
 
-- /rooms → Manage rooms
-- /sensors → Manage sensors
-- /sensors/{id}/readings → Manage sensor readings
+- 🏠 Rooms  
+- 📡 Sensors  
+- 📊 Sensor Readings  
 
-Features:
-- Versioned API (/api/v1)
-- Sub-resource locator pattern
-- Query parameter filtering (?type=)
-- Proper HTTP status codes
-- Custom exception handling
-- Global error handling
-- Request and response logging
+### ✨ Features
 
----
-
-## Technologies Used
-
-- Java
-- JAX-RS (Jersey)
-- Maven
-- Embedded Grizzly HTTP Server
+- Room management (create, retrieve, delete)  
+- Sensor registration and filtering (`?type=`)  
+- Sensor readings via sub-resource pattern  
+- Prevent deleting rooms with sensors  
+- Structured error handling (no stack traces)  
+- Request & response logging  
+- In-memory storage only (`HashMap`, `ArrayList`)  
 
 ---
 
-## How to Build and Run
+## 🔗 Base URL
 
-1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/smart-campus-api.git
-cd smart-campus-api
-
-2. Build the project
-mvn clean compile
-
-3. Run the server
-mvn exec:java
-
-4. Open the API
-http://localhost:8080/api/v1/
+`http://localhost:8080/api/v1/`
 
 ---
 
-## Sample curl Commands
+## 🛠️ Technologies Used
 
-1. Discovery endpoint
-curl http://localhost:8080/api/v1/
-
-2. Create a room
-curl -X POST http://localhost:8080/api/v1/rooms -H "Content-Type: application/json" -d "{\"id\":\"LAB-101\",\"name\":\"Computer Lab 101\",\"capacity\":40}"
-
-3. Get all rooms
-curl http://localhost:8080/api/v1/rooms
-
-4. Create a sensor
-curl -X POST http://localhost:8080/api/v1/sensors -H "Content-Type: application/json" -d "{\"id\":\"TEMP-001\",\"type\":\"Temperature\",\"status\":\"ACTIVE\",\"currentValue\":0,\"roomId\":\"LAB-101\"}"
-
-5. Get sensors (filtered)
-curl http://localhost:8080/api/v1/sensors?type=Temperature
-
-6. Add sensor reading
-curl -X POST http://localhost:8080/api/v1/sensors/TEMP-001/readings -H "Content-Type: application/json" -d "{\"value\":26.7}"
-
-7. Get sensor readings
-curl http://localhost:8080/api/v1/sensors/TEMP-001/readings
+- Java  
+- JAX-RS (Jersey)  
+- Grizzly HTTP Server  
+- Maven  
+- Jackson  
 
 ---
 
-## Error Handling
+## 🚀 How to Build and Run
 
-The API uses custom exception handling:
+1. Clone the repository  
+   `git clone https://github.com/YOUR_USERNAME/smart-campus-api.git`
 
-- RoomNotEmptyException → 409 Conflict
-- LinkedResourceNotFoundException → 422 Unprocessable Entity
-- SensorUnavailableException → 403 Forbidden
-- GlobalExceptionMapper → 500 Internal Server Error
+2. Navigate into the project  
+   `cd smart-campus-api`
 
----
+3. Build the project  
+   `mvn clean compile`
 
-## Logging
+4. Run the server  
+   `mvn exec:java`
 
-A logging filter is implemented using:
-- ContainerRequestFilter
-- ContainerResponseFilter
-
-It logs:
-- Incoming HTTP method and URI
-- Outgoing HTTP response status
+5. Open in browser or Postman  
+   `http://localhost:8080/api/v1/`
 
 ---
 
-## Report Answers
+## 🔗 API Endpoints
+
+### Discovery
+GET `/api/v1` → API info and resource links  
+
+---
+
+### Rooms (`/api/v1/rooms`)
+GET `/rooms` → Get all rooms  
+GET `/rooms/{id}` → Get room by ID  
+POST `/rooms` → Create room  
+DELETE `/rooms/{id}` → Delete room (fails if sensors exist)  
+
+---
+
+### Sensors (`/api/v1/sensors`)
+GET `/sensors` → Get all sensors  
+GET `/sensors?type=Temperature` → Filter sensors  
+POST `/sensors` → Create sensor  
+
+---
+
+### Sensor Readings (`/api/v1/sensors/{id}/readings`)
+GET `/readings` → Get all readings  
+POST `/readings` → Add reading  
+
+---
+
+## 💻 Sample curl Commands
+
+1. Discovery  
+   `curl http://localhost:8080/api/v1/`
+
+2. Create Room  
+   `curl -X POST http://localhost:8080/api/v1/rooms -H "Content-Type: application/json" -d "{\"id\":\"LAB-101\",\"name\":\"Computer Lab\",\"capacity\":40}"`
+
+3. Get Rooms  
+   `curl http://localhost:8080/api/v1/rooms`
+
+4. Create Sensor  
+   `curl -X POST http://localhost:8080/api/v1/sensors -H "Content-Type: application/json" -d "{\"id\":\"TEMP-001\",\"type\":\"Temperature\",\"status\":\"ACTIVE\",\"currentValue\":0,\"roomId\":\"LAB-101\"}"`
+
+5. Filter Sensors  
+   `curl http://localhost:8080/api/v1/sensors?type=Temperature`
+
+6. Add Sensor Reading  
+   `curl -X POST http://localhost:8080/api/v1/sensors/TEMP-001/readings -H "Content-Type: application/json" -d "{\"value\":26.7}"`
+
+7. Get Sensor Readings  
+   `curl http://localhost:8080/api/v1/sensors/TEMP-001/readings`
+
+---
+
+## ⚠️ Error Handling
+
+- 400 → Bad request  
+- 403 → Sensor in maintenance  
+- 404 → Resource not found  
+- 409 → Room has sensors  
+- 415 → Unsupported media type  
+- 422 → Invalid room reference  
+- 500 → Internal server error  
+
+---
+
+## 📝 Report Answers
 
 ### Part 1
+JAX-RS resources are request-scoped, meaning a new instance is created per request. Shared data must be stored in static collections, which require careful handling.
 
-Default lifecycle of JAX-RS resource classes:
-JAX-RS resource classes are typically request-scoped, meaning a new instance is created for each incoming request. This prevents shared request data between clients. Since this project uses in-memory storage, shared data must be stored in static collections such as HashMap and handled carefully to avoid race conditions.
-
-Why hypermedia is important:
-Hypermedia allows clients to discover available resources and actions dynamically through API responses. This reduces reliance on static documentation and improves flexibility.
+Hypermedia helps clients discover API functionality dynamically, reducing dependency on static documentation.
 
 ---
 
 ### Part 2
+Returning IDs reduces payload size but requires additional requests. Returning full objects is more convenient but increases response size.
 
-Returning IDs vs full objects:
-Returning only IDs reduces bandwidth usage but requires additional requests from clients. Returning full objects provides complete data but increases response size.
-
-Is DELETE idempotent:
-Yes, DELETE is idempotent because repeating the same request results in the same final state. Once a resource is deleted, further DELETE requests do not change the system.
+DELETE is idempotent because repeating it results in the same final system state.
 
 ---
 
 ### Part 3
+If a client sends non-JSON data, JAX-RS may return HTTP 415.
 
-Effect of @Consumes(MediaType.APPLICATION_JSON):
-If a client sends a different content type such as text/plain, the request may be rejected with HTTP 415 Unsupported Media Type because JAX-RS cannot process it.
-
-Why use query parameters:
-Query parameters are better for filtering collections. /sensors?type=CO2 clearly indicates filtering, while path-based filtering is less flexible.
+Query parameters are better for filtering because they are flexible and optional.
 
 ---
 
 ### Part 4
-
-Benefits of sub-resource locator:
-This pattern improves modularity by separating nested resource logic into different classes. It makes the code easier to maintain and extend.
+The sub-resource locator pattern improves modularity by separating nested resource logic into different classes.
 
 ---
 
 ### Part 5
+HTTP 422 is used because the request format is valid but the data inside is incorrect.
 
-Why HTTP 422 instead of 404:
-HTTP 422 is used because the request is valid, but the data inside it is incorrect. The issue is not the URL, but the invalid reference inside the request body.
+Stack traces should not be exposed because they reveal internal system details.
 
-Why stack traces should not be exposed:
-Stack traces reveal internal implementation details such as class names and file paths, which can be used by attackers. Returning a generic error response improves security.
-
-Why use filters for logging:
-Filters allow logging to be handled in one place instead of repeating logging code in every resource method. This improves consistency and maintainability.
+Filters centralize logging, improving maintainability.
