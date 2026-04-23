@@ -44,7 +44,7 @@ This API simulates a Smart Campus system with three main resources:
 ## 🚀 How to Build and Run
 
 1. Clone the repository  
-   `git clone https://github.com/YOUR_USERNAME/smart-campus-api.git`
+   `git clone https://github.com/ShehanJoel/smart-campus-api.git`
 
 2. Navigate into the project  
    `cd smart-campus-api`
